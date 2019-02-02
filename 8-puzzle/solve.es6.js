@@ -1,4 +1,10 @@
-const _ = require('lodash')
+function cloneDeep (obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
+function random (min, max) {
+  return min + Math.floor(Math.random() * (max - min))
+}
 
 class Puzzle {
   constructor () {
@@ -9,13 +15,15 @@ class Puzzle {
   }
 
   randomize () {
-    const flat = _.flatten(this.board)
-    const rflat = _.shuffle(flat)
-    this.board = _.chunk(rflat, 3)
+    const shuffleMoves = random(100, 200)
+    for (let i = 0; i < shuffleMoves; i++) {
+      const piece = random(0, 9)
+      this.move(piece)
+    }
   }
 
   print (board = this.board) {
-    const str = board.map(row => row.join(' ')).join('\n')
+    const str = board.map(row => row.join(' ').replace('0', ' ')).join('\n')
     console.log(str)
   }
 
@@ -37,9 +45,9 @@ class Puzzle {
   }
 
   swap (i1, j1, i2, j2) {
-    const _ = this.board[i1][j1]
+    const temp = this.board[i1][j1]
     this.board[i1][j1] = this.board[i2][j2]
-    this.board[i2][j2] = _
+    this.board[i2][j2] = temp
   }
 
   getMove (piece) {
@@ -73,7 +81,7 @@ class Puzzle {
           this.swap(line, column, line - 1, column)
           break
       }
-      if (move) this.lastMove = piece
+      this.lastMove = piece
       return move
     }
   }
@@ -82,14 +90,14 @@ class Puzzle {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         const piece = this.board[i][j]
-        if (piece > 0) {
+        if (piece !== 0) {
           const line = Math.floor((piece - 1) / 3)
           const column = (piece - 1) % 3
-          return i === line && j === column
+          if (i !== line || j !== column) return false
         }
       }
-      return true
     }
+    return true
   }
 
   getCopy () {
@@ -126,7 +134,7 @@ class Puzzle {
         const newBoard = this.getCopy()
         newBoard.move(move)
         newBoard.path.push(move)
-        newBoard.moves.push(_.cloneDeep(this.board))
+        newBoard.moves.push(cloneDeep(this.board))
         children.push(newBoard)
       }
     }
@@ -136,11 +144,15 @@ class Puzzle {
   solve (print = false) {
     const start = this.getCopy()
     start.path = []
+    start.moves = []
     let states = [start]
     while (states.length > 0) {
       const state = states.shift()
       if (state.isGoalState()) {
-        if (print) this.printAll(state.moves)
+        if (print) {
+          this.printAll(state.moves)
+          this.print(state.board)
+        }
         return state.path
       }
       states = states.concat(state.visit())

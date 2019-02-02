@@ -5,8 +5,8 @@
   "main": "index.js",
   "repository": "git@github.com:fa7ad/js-ai-code.git",
   "author": "Fahad Hossain <8bit.demoncoder@gmail.com> (https://fa7ad.github.io/)",
-  "license": "MIT",
-  "private": true,
+  "license": "GPL3",
+  "private": false,
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "eslint": "^5.12.1",
@@ -18,5 +18,8 @@
   },
   "dependencies": {
     "lodash": "^4.17.11"
+  },
+  "scripts": {
+    "8puzzle": "node 8-puzzle/index.js"
   }
 }
