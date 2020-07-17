@@ -17,7 +17,7 @@
     "eslint-plugin-standard": "^4.0.1"
   },
   "dependencies": {
-    "lodash": "^4.17.14"
+    "lodash": "^4.17.19"
   },
   "scripts": {
     "8puzzle": "node 8-puzzle/index.js"
